@@ -13,7 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/tags")
-@Tag(name = "Tags API", description = "CRUD операции для управлениями тегами")
+@Tag(name = "Tags API", description = "CRUD и не только операции для управлениями тегами")
 public class TagController {
 
     private final TagService tagService;
@@ -56,4 +56,19 @@ public class TagController {
         tagService.deleteTag(id);
         return ResponseEntity.noContent().build();
     }
+
+    @Operation(summary = "Получить список тегов по имени клиента")
+    @GetMapping("/client/{clientName}")
+    public ResponseEntity<List<TagResponse>> getTagsByClientName(@PathVariable String clientName) {
+        List<TagResponse> tagResponses = tagService.getTagsByClientName(clientName);
+        return ResponseEntity.ok(tagResponses);
+    }
+
+    @Operation(summary = "Получить список тегов по имени мастера")
+    @GetMapping("/master/{masterName}")
+    public ResponseEntity<List<TagResponse>> getTagsByMasterName(@PathVariable String masterName) {
+        List<TagResponse> tagResponses = tagService.getTagsByMasterName(masterName);
+        return ResponseEntity.ok(tagResponses);
+    }
+
 }

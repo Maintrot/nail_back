@@ -72,4 +72,30 @@ public class TagServiceImpl implements TagService {
     public void deleteTag(Long id) {
         tagRepository.deleteById(id);
     }
+
+    @Override
+    public List<TagResponse> getTagsByClientName(String clientName) {
+        User client = userRepository.findByName(clientName)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        if (!"USER_CLIENT".equals(client.getRole())) {
+            throw new RuntimeException("User is not a client");
+        }
+        List<Tag> tags = tagRepository.findByClient(client);
+        return tags.stream()
+                .map(tagMapper::toResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<TagResponse> getTagsByMasterName(String masterName) {
+        User master = userRepository.findByName(masterName)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        if (!"USER_MASTER".equals(master.getRole())) {
+            throw new RuntimeException("User is not a master");
+        }
+        List<Tag> tags = tagRepository.findByMaster(master);
+        return tags.stream()
+                .map(tagMapper::toResponse)
+                .collect(Collectors.toList());
+    }
 }

@@ -65,4 +65,27 @@ public class MasterServiceServiceImpl implements MasterServiceService {
     public void deleteMasterService(Long id) {
         masterServiceRepository.deleteById(id);
     }
+
+    @Override
+    public List<MasterServiceResponse> getMasterServicesByMasterName(String masterName) {
+        User master = userRepository.findByName(masterName)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        if (!"USER_MASTER".equals(master.getRole())) {
+            throw new RuntimeException("User is not a master");
+        }
+        List<MasterService> masterServices = masterServiceRepository.findByMaster(master);
+        return masterServices.stream()
+                .map(masterServiceMapper::toResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<MasterServiceResponse> getMasterServicesBySalonServiceName(String salonServiceName) {
+        SalonService salonService = salonServiceRepository.findByName(salonServiceName)
+                .orElseThrow(() -> new RuntimeException("Salon service not found"));
+        List<MasterService> masterServices = masterServiceRepository.findByService(salonService);
+        return masterServices.stream()
+                .map(masterServiceMapper::toResponse)
+                .collect(Collectors.toList());
+    }
 }

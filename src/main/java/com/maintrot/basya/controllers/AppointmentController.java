@@ -13,7 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/appointments")
-@Tag(name = "appointments API", description = "CRUD операции для управления записями")
+@Tag(name = "appointments API", description = "CRUD и не только операции для управления записями")
 public class AppointmentController {
     private final AppointmentService appointmentService;
 

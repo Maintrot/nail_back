@@ -13,7 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/Schedules")
-@Tag(name = "Schedules API", description = "CRUD операции для управления расписанием")
+@Tag(name = "Schedules API", description = "CRUD и не только операции для управления расписанием")
 public class ScheduleController {
 
     private final ScheduleService scheduleService;

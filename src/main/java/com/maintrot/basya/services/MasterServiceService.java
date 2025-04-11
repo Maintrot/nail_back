@@ -10,4 +10,6 @@ public interface MasterServiceService {
     MasterServiceResponse getMasterService(Long id);
     List<MasterServiceResponse> getAllMasterServices();
     void deleteMasterService(Long id);
+    List<MasterServiceResponse> getMasterServicesByMasterName(String masterName);
+    List<MasterServiceResponse> getMasterServicesBySalonServiceName(String SalonServiceName);
 }

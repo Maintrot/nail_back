@@ -2,6 +2,8 @@ package com.maintrot.basya.controllers;
 
 import com.maintrot.basya.dtoes.UserRequest;
 import com.maintrot.basya.dtoes.UserResponse;
+import com.maintrot.basya.enums.Role;
+import com.maintrot.basya.models.User;
 import com.maintrot.basya.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -13,7 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/users")
-@Tag(name = "User API", description = "CRUD операции для управления пользователями")
+@Tag(name = "User API", description = "CRUD и не только операции для управления пользователями")
 public class UserController {
 
     private final UserService userService;
@@ -55,5 +57,27 @@ public class UserController {
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @Operation(summary = "Получить пользователя по имени")
+    @GetMapping("/name/{name}")
+    public ResponseEntity<UserResponse> getUserByName(@PathVariable String name) {
+        UserResponse userResponse = userService.getUserByName(name);
+        return ResponseEntity.ok(userResponse);
+    }
+
+    @Operation(summary = "Получить список пользователей по роли")
+    @GetMapping("/role/{role}")
+    public ResponseEntity<List<UserResponse>> getUsersByrole(@PathVariable String role) {
+        Role userRole = Role.valueOf(role);
+        List<UserResponse> userResponses = userService.getUsersByRole(userRole);
+        return ResponseEntity.ok(userResponses);
+    }
+
+    @Operation(summary = "Найти пользоватееля по номеру телефона")
+    @GetMapping("/phone/{phone}")
+    public ResponseEntity<UserResponse> getUserByPhone(@PathVariable String phone) {
+        UserResponse userResponse = userService.getUserByPhone(phone);
+        return ResponseEntity.ok(userResponse);
     }
 }

@@ -14,7 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/MasterServices")
-@Tag(name = "Master Services API", description = "CRUD операции для управления сервисами мастера")
+@Tag(name = "Master Services API", description = "CRUD и не только операции для управления сервисами мастера")
 public class MasterServiceController {
 
     private final MasterServiceService masterServiceService;
@@ -49,5 +49,19 @@ public class MasterServiceController {
     public ResponseEntity<Void> deleteMasterService(@PathVariable Long id) {
         masterServiceService.deleteMasterService(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @Operation(summary = "Получить список сервисов мастеров по имени мастера")
+    @GetMapping("/masterName/{masterName}")
+    public ResponseEntity<List<MasterServiceResponse>> getMasterServicesByMasterName(@PathVariable String masterName) {
+        List<MasterServiceResponse> masterServiceResponses = masterServiceService.getMasterServicesByMasterName(masterName);
+        return ResponseEntity.ok(masterServiceResponses);
+    }
+
+    @Operation(summary = "Получить список сервисов мастеров по имени сервиса")
+    @GetMapping("/serviceName/{serviceName}")
+    public ResponseEntity<List<MasterServiceResponse>> getMasterServicesBySalonServiceName(@PathVariable String serviceName) {
+        List<MasterServiceResponse> masterServiceResponses = masterServiceService.getMasterServicesBySalonServiceName(serviceName);
+        return ResponseEntity.ok(masterServiceResponses);
     }
 }

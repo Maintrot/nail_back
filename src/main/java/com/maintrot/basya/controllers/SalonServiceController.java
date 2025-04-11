@@ -13,7 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/salon_services")
-@Tag(name = "Salon services API", description = "CRUD операции для управления сервисами пользователя")
+@Tag(name = "Salon services API", description = "CRUD и не только операции для управления сервисами пользователя")
 public class SalonServiceController {
 
     private final SalonServiceService salonServiceService;
@@ -55,5 +55,12 @@ public class SalonServiceController {
     public ResponseEntity<SalonServiceResponse> deleteSalonService(@PathVariable Long id) {
         salonServiceService.deleteSalonService(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @Operation(summary = "Получить сервис салона по имени сервиса")
+    @GetMapping("/name/{name}")
+    public ResponseEntity<SalonServiceResponse> getSalonServiceByName(@PathVariable String name) {
+        SalonServiceResponse salonServiceResponse = salonServiceService.getSalonServiceByName(name);
+        return ResponseEntity.ok(salonServiceResponse);
     }
 }

@@ -11,4 +11,5 @@ public interface SalonServiceService {
     List<SalonServiceResponse> getAllSalonServices();
     SalonServiceResponse updateSalonService(Long id, SalonServiceRequest salonServiceRequest);
     void deleteSalonService(Long id);
+    SalonServiceResponse getSalonServiceByName(String salonServiceName);
 }

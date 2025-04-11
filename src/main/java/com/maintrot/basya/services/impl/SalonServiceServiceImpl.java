@@ -58,4 +58,11 @@ public class SalonServiceServiceImpl implements SalonServiceService {
     public void deleteSalonService(Long id) {
         salonServiceRepository.deleteById(id);
     }
+
+    @Override
+    public SalonServiceResponse getSalonServiceByName(String salonServiceName) {
+        SalonService salonService = salonServiceRepository.findByName(salonServiceName)
+                .orElseThrow(() -> new RuntimeException("Salon service not found"));
+        return salonServiceMapper.toResponce(salonService);
+    }
 }

@@ -13,7 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("api/dependencies")
-@Tag(name = "Dependencies API", description = "CRUD операции для управления зависимостями")
+@Tag(name = "Dependencies API", description = "CRUD и не только операции для управления зависимостями")
 public class DependenceController {
 
     private final DependenceService dependenceService;

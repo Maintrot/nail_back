@@ -13,7 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/Reviews")
-@Tag(name = "Review API", description = "CRUD операции для управления отзывами")
+@Tag(name = "Review API", description = "CRUD и не только операции для управления отзывами")
 public class ReviewController {
 
     private final ReviewService reviewService;

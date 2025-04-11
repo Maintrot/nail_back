@@ -86,4 +86,19 @@ public class UserServiceImpl implements UserService {
         return userMapper.toResponse(savedUser);
     }
 
+    @Override
+    public List<UserResponse> getUsersByRole(Role role) {
+        List<User> users = userRepository.findByRole(role);
+        return users.stream()
+                .map(userMapper::toResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public UserResponse getUserByPhone(String phone) {
+        User user = userRepository.findByPhone(phone)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        return userMapper.toResponse(user);
+    }
+
 }

@@ -11,4 +11,6 @@ public interface TagService {
     List<TagResponse> getAllTags();
     TagResponse updateTag(Long id, TagRequest tagRequest);
     void deleteTag(Long id);
+    List<TagResponse> getTagsByClientName(String clientName);
+    List<TagResponse> getTagsByMasterName(String masterName);
 }

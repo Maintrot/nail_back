@@ -13,7 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/achievements")
-@Tag(name = "Achievement API", description = "CRUD операции для управления ачивками")
+@Tag(name = "Achievement API", description = "CRUD и не только операции для управления ачивками")
 public class AchievementController {
 
     private final AchievementService achievementService;
