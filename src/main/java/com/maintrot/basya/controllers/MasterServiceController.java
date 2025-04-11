@@ -1,0 +1,53 @@
+package com.maintrot.basya.controllers;
+
+import com.maintrot.basya.dtoes.MasterServiceRequest;
+import com.maintrot.basya.dtoes.MasterServiceResponse;
+import com.maintrot.basya.services.MasterServiceService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.extern.java.Log;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/MasterServices")
+@Tag(name = "Master Services API", description = "CRUD операции для управления сервисами мастера")
+public class MasterServiceController {
+
+    private final MasterServiceService masterServiceService;
+
+    public MasterServiceController(MasterServiceService masterServiceService) {
+        this.masterServiceService = masterServiceService;
+    }
+
+    @Operation(summary = "Создать новый сервис мастера")
+    @PostMapping
+    public ResponseEntity<MasterServiceResponse> createMasterService(MasterServiceRequest masterServiceRequest) {
+        MasterServiceResponse masterServiceResponse = masterServiceService.createMasterService(masterServiceRequest);
+        return new ResponseEntity<>(masterServiceResponse, HttpStatus.CREATED);
+    }
+
+    @Operation(summary = "Получить сервис мастера по ID (с данными мастера и сервиса салона)")
+    @GetMapping("/{id}")
+    public ResponseEntity<MasterServiceResponse> getMasterService(@PathVariable Long id) {
+        MasterServiceResponse masterServiceResponse = masterServiceService.getMasterService(id);
+        return ResponseEntity.ok(masterServiceResponse);
+    }
+
+    @Operation(summary = "Получить список всех сервисов мастеров")
+    @GetMapping
+    public ResponseEntity<List<MasterServiceResponse>> getAllMasterServices() {
+        List<MasterServiceResponse> masterServiceResponses = masterServiceService.getAllMasterServices();
+        return ResponseEntity.ok(masterServiceResponses);
+    }
+
+    @Operation(summary = "Удалить сервис мастера")
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteMasterService(@PathVariable Long id) {
+        masterServiceService.deleteMasterService(id);
+        return ResponseEntity.noContent().build();
+    }
+}
