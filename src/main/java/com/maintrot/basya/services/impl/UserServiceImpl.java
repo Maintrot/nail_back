@@ -73,15 +73,37 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponse registerUser(UserRequest userRequest) {
-        if (userRepository.existsByName(userRequest.getName())) {
-            throw new RuntimeException("User with this name already exist");
+    public UserResponse registerUserClient(UserRequest userRequest) {
+        if (userRepository.existsByPhone(userRequest.getPhone())) {
+            throw new RuntimeException("User with this phone already exist");
         }
         User user = userMapper.toEntity(userRequest);
         user.setPassword(passwordEncoder.encode(userRequest.getPassword()));
-        if (user.getRole() == null) {
-            user.setRole(Role.USER_CLIENT);
+        user.setRole(Role.USER_CLIENT);
+        User savedUser = userRepository.save(user);
+        return userMapper.toResponse(savedUser);
+    }
+
+    @Override
+    public UserResponse registerUserMaster(UserRequest userRequest) {
+        if (userRepository.existsByPhone(userRequest.getPhone())) {
+            throw new RuntimeException("User with this phone already exist");
         }
+        User user = userMapper.toEntity(userRequest);
+        user.setPassword(passwordEncoder.encode(userRequest.getPassword()));
+        user.setRole(Role.USER_MASTER);
+        User savedUser = userRepository.save(user);
+        return userMapper.toResponse(savedUser);
+    }
+
+    @Override
+    public UserResponse registerUserAdmin(UserRequest userRequest) {
+        if (userRepository.existsByPhone(userRequest.getPhone())) {
+            throw new RuntimeException("User with this phone already exist");
+        }
+        User user = userMapper.toEntity(userRequest);
+        user.setPassword(passwordEncoder.encode(userRequest.getPassword()));
+        user.setRole(Role.USER_ADMIN);
         User savedUser = userRepository.save(user);
         return userMapper.toResponse(savedUser);
     }

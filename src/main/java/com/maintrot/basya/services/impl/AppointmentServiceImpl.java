@@ -2,6 +2,7 @@ package com.maintrot.basya.services.impl;
 
 import com.maintrot.basya.dtoes.AppointmentRequest;
 import com.maintrot.basya.dtoes.AppointmentResponse;
+import com.maintrot.basya.enums.Role;
 import com.maintrot.basya.mappers.AppointmentMapper;
 import com.maintrot.basya.models.Appointment;
 import com.maintrot.basya.models.SalonService;
@@ -35,12 +36,12 @@ public class AppointmentServiceImpl implements AppointmentService {
     public AppointmentResponse createAppointment(AppointmentRequest appointmentRequest) {
         User master = userRepository.findById(appointmentRequest.getMasterId())
                 .orElseThrow(() -> new RuntimeException("User not found"));
-        if (!"USER_MASTER".equals(master.getRole())) {
+        if (!Role.USER_MASTER.equals(master.getRole())) {
             throw new RuntimeException("User is not a master");
         }
         User client = userRepository.findById(appointmentRequest.getClientId())
                 .orElseThrow(() -> new RuntimeException("User not found"));
-        if (!"USER_CLIENT".equals(master.getRole())) {
+        if (!Role.USER_CLIENT.equals(master.getRole())) {
             throw new RuntimeException("User is not a client");
         }
         SalonService salonService = salonServiceRepository.findById(appointmentRequest.getServiceId())
@@ -75,7 +76,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         if (appointmentRequest.getClientId() != null) {
             User client = userRepository.findById(appointmentRequest.getMasterId())
                     .orElseThrow(() -> new RuntimeException("User not found"));
-            if (!"USER_CLIENT".equals(client.getRole())) {
+            if (!Role.USER_CLIENT.equals(client.getRole())) {
                 throw new RuntimeException("User is not a client");
             }
             appointment.setClient(client);
@@ -83,7 +84,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         if (appointmentRequest.getMasterId() != null) {
             User master = userRepository.findById(appointmentRequest.getMasterId())
                     .orElseThrow(() -> new RuntimeException("User not found"));
-            if (!"USER_MASTER".equals(master.getRole())) {
+            if (!Role.USER_MASTER.equals(master.getRole())) {
                 throw new RuntimeException("User is not a master");
             }
             appointment.setMaster(master);
@@ -99,8 +100,12 @@ public class AppointmentServiceImpl implements AppointmentService {
         if (appointmentRequest.getTime() != null) {
             appointment.setTime(java.time.LocalTime.parse(appointmentRequest.getTime()));
         }
-        appointment.setPhoto(appointmentRequest.getPhoto());
-        appointment.setText(appointmentRequest.getText());
+        if (appointmentRequest.getPhoto() != null) {
+            appointment.setPhoto(appointmentRequest.getPhoto());
+        }
+        if (appointmentRequest.getText() != null) {
+            appointment.setText(appointmentRequest.getText());
+        }
         Appointment updatedAppointment = appointmentRepository.save(appointment);
         return appointmentMapper.toResponse(updatedAppointment);
     }

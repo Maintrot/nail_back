@@ -2,6 +2,7 @@ package com.maintrot.basya.services.impl;
 
 import com.maintrot.basya.dtoes.ScheduleRequest;
 import com.maintrot.basya.dtoes.ScheduleResponse;
+import com.maintrot.basya.enums.Role;
 import com.maintrot.basya.enums.WeekDay;
 import com.maintrot.basya.mappers.ScheduleMapper;
 import com.maintrot.basya.models.Schedule;
@@ -18,7 +19,7 @@ import java.util.stream.Collectors;
 public class ScheduleServiceImpl implements ScheduleService {
     private final ScheduleRepository scheduleRepository;
     private final ScheduleMapper scheduleMapper;
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     public ScheduleServiceImpl(ScheduleRepository scheduleRepository, ScheduleMapper scheduleMapper, UserRepository userRepository) {
         this.scheduleRepository = scheduleRepository;
@@ -30,7 +31,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     public ScheduleResponse createSchedule(ScheduleRequest scheduleRequest) {
         User master = userRepository.findById(scheduleRequest.getMasterId())
                 .orElseThrow(() -> new RuntimeException("User not found"));
-        if (!"USER_MASTER".equals(master.getRole())) {
+        if (!Role.USER_MASTER.equals(master.getRole())) {
             throw new RuntimeException("User is not a master");
         }
         Schedule schedule = scheduleMapper.toEntity(scheduleRequest);
@@ -78,5 +79,44 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Override
     public void deleteSchedule(Long id) {
         scheduleRepository.deleteById(id);
+    }
+
+    @Override
+    public List<ScheduleResponse> getSchedulesByMasterName(String masterName) {
+        User master = userRepository.findByName(masterName)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        if (!Role.USER_MASTER.equals(master.getRole())) {
+            throw new RuntimeException("User is not a master");
+        }
+        List<Schedule> schedules = scheduleRepository.findByMaster(master);
+        return schedules.stream()
+                .map(scheduleMapper::toResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ScheduleResponse> getSchedulesByMasterPhone(String phoneName) {
+        User master = userRepository.findByPhone(phoneName)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        if (!Role.USER_MASTER.equals(master.getRole())) {
+            throw new RuntimeException("User is not a master");
+        }
+        List<Schedule> schedules = scheduleRepository.findByMaster(master);
+        return schedules.stream()
+                .map(scheduleMapper::toResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ScheduleResponse> getSchedulesByWeekDay(String day) {
+        try {
+            WeekDay weekDay = WeekDay.valueOf(day.toUpperCase());
+            List<Schedule> schedules = scheduleRepository.findByDay(weekDay);
+            return schedules.stream()
+                    .map(scheduleMapper::toResponse)
+                    .collect(Collectors.toList());
+        } catch (IllegalArgumentException ex) {
+            throw new IllegalArgumentException("Incorrect day of week");
+        }
     }
 }

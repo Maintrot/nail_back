@@ -17,7 +17,6 @@ public class Review {
 
     @ManyToOne
     @JoinColumn(name = "client_id", nullable = false)
-    @Where(clause = "role = 'USER_CLIENT'")
     private User client;
 
     @Column(name = "Текст отзыва", nullable = false, columnDefinition = "TEXT")

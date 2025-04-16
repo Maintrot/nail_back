@@ -2,6 +2,7 @@ package com.maintrot.basya.services.impl;
 
 import com.maintrot.basya.dtoes.AchievementRequest;
 import com.maintrot.basya.dtoes.AchievementResponse;
+import com.maintrot.basya.enums.Role;
 import com.maintrot.basya.mappers.AchievementMapper;
 import com.maintrot.basya.models.Achievement;
 import com.maintrot.basya.models.User;
@@ -30,7 +31,7 @@ public class AchievementServiceImpl implements AchievementService {
     public AchievementResponse createAchievement(AchievementRequest achievementRequest) {
         User client = userRepository.findById(achievementRequest.getClientId())
                 .orElseThrow(() -> new RuntimeException("User not found"));
-        if (!"USER_CLIENT".equals(client.getRole())) {
+        if (!Role.USER_CLIENT.equals(client.getRole())) {
             throw new RuntimeException("User is not a client");
         }
         Achievement achievement = achievementMapper.toEntity(achievementRequest);
@@ -67,5 +68,26 @@ public class AchievementServiceImpl implements AchievementService {
     @Override
     public void deleteAchievement(Long id) {
         achievementRepository.deleteById(id);
+    }
+
+    @Override
+    public List<AchievementResponse> getAchievementsByClientName(String clientName) {
+        User client = userRepository.findByName(clientName)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        if (!Role.USER_CLIENT.equals(client.getRole())) {
+            throw new RuntimeException("User is not a client");
+        }
+        List<Achievement> achievements = achievementRepository.findByClient(client);
+        return achievements.stream()
+                .map(achievementMapper::toResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<AchievementResponse> getAchievementsByName(String name) {
+        List<Achievement> achievements = achievementRepository.findByName(name);
+        return achievements.stream()
+                .map(achievementMapper::toResponse)
+                .collect(Collectors.toList());
     }
 }

@@ -12,5 +12,6 @@ public interface DependenceService {
     List<DependenceResponse> getAllDependencies();
     DependenceResponse updateDependence(Long id, DependenceRequest dependenceRequest);
     void deleteDependence(Long id);
+    DependenceResponse getDependenceByName(String name);
 
 }

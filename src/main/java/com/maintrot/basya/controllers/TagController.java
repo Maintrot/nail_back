@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,6 +25,7 @@ public class TagController {
 
     @Operation(summary = "Создать новый тег")
     @PostMapping
+    @PreAuthorize("hasAnyRole('USER_ADMIN', 'USER_MASTER')")
     public ResponseEntity<TagResponse> createTag(@RequestBody TagRequest tagRequest) {
         TagResponse tagResponse = tagService.createTag(tagRequest);
         return new ResponseEntity<>(tagResponse, HttpStatus.CREATED);
@@ -31,6 +33,7 @@ public class TagController {
 
     @Operation(summary = "Получить тег по ID (с данными о пользователях)")
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('USER_ADMIN', 'USER_MASTER')")
     public ResponseEntity<TagResponse> getTag(@PathVariable Long id) {
         TagResponse tagResponse = tagService.getTag(id);
         return ResponseEntity.ok(tagResponse);
@@ -38,6 +41,7 @@ public class TagController {
 
     @Operation(summary = "Получить список всех теги")
     @GetMapping
+    @PreAuthorize("hasAnyRole('USER_ADMIN', 'USER_MASTER')")
     public ResponseEntity<List<TagResponse>> getAllTag() {
         List<TagResponse> tagResponses = tagService.getAllTags();
         return ResponseEntity.ok(tagResponses);
@@ -45,6 +49,7 @@ public class TagController {
 
     @Operation(summary = "Обновить данные тега")
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('USER_ADMIN', 'USER_MASTER')")
     public ResponseEntity<TagResponse> updateTag(@PathVariable Long id, @RequestBody TagRequest tagRequest) {
         TagResponse tagResponse = tagService.updateTag(id, tagRequest);
         return ResponseEntity.ok(tagResponse);
@@ -52,6 +57,7 @@ public class TagController {
 
     @Operation(summary = "Удалить тег")
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('USER_ADMIN', 'USER_MASTER')")
     public ResponseEntity<Void> deleteTag(@PathVariable Long id) {
         tagService.deleteTag(id);
         return ResponseEntity.noContent().build();
@@ -59,6 +65,7 @@ public class TagController {
 
     @Operation(summary = "Получить список тегов по имени клиента")
     @GetMapping("/client/{clientName}")
+    @PreAuthorize("hasAnyRole('USER_ADMIN', 'USER_MASTER')")
     public ResponseEntity<List<TagResponse>> getTagsByClientName(@PathVariable String clientName) {
         List<TagResponse> tagResponses = tagService.getTagsByClientName(clientName);
         return ResponseEntity.ok(tagResponses);
@@ -66,6 +73,7 @@ public class TagController {
 
     @Operation(summary = "Получить список тегов по имени мастера")
     @GetMapping("/master/{masterName}")
+    @PreAuthorize("hasAnyRole('USER_ADMIN', 'USER_MASTER')")
     public ResponseEntity<List<TagResponse>> getTagsByMasterName(@PathVariable String masterName) {
         List<TagResponse> tagResponses = tagService.getTagsByMasterName(masterName);
         return ResponseEntity.ok(tagResponses);

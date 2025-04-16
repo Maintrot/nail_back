@@ -11,4 +11,6 @@ public interface AchievementService {
     List<AchievementResponse> getAllAchievements();
     AchievementResponse updateAchievement(Long id, AchievementRequest achievementRequest);
     void deleteAchievement(Long id);
+    List<AchievementResponse> getAchievementsByClientName(String clientName);
+    List<AchievementResponse> getAchievementsByName(String name);
 }

@@ -2,6 +2,7 @@ package com.maintrot.basya.services.impl;
 
 import com.maintrot.basya.dtoes.MasterServiceRequest;
 import com.maintrot.basya.dtoes.MasterServiceResponse;
+import com.maintrot.basya.enums.Role;
 import com.maintrot.basya.mappers.MasterServiceMapper;
 import com.maintrot.basya.models.MasterService;
 import com.maintrot.basya.models.SalonService;
@@ -34,7 +35,7 @@ public class MasterServiceServiceImpl implements MasterServiceService {
     public MasterServiceResponse createMasterService(MasterServiceRequest masterServiceRequest) {
         User master = userRepository.findById(masterServiceRequest.getMasterId())
                 .orElseThrow(() -> new RuntimeException("User not found"));
-        if (!"USER_MASTER".equals(master.getRole())) {
+        if (!Role.USER_MASTER.equals(master.getRole())) {
             throw new RuntimeException("User is not a master");
         }
         SalonService salonService = salonServiceRepository.findById(masterServiceRequest.getSalonServiceId())
@@ -70,7 +71,7 @@ public class MasterServiceServiceImpl implements MasterServiceService {
     public List<MasterServiceResponse> getMasterServicesByMasterName(String masterName) {
         User master = userRepository.findByName(masterName)
                 .orElseThrow(() -> new RuntimeException("User not found"));
-        if (!"USER_MASTER".equals(master.getRole())) {
+        if (!Role.USER_MASTER.equals(master.getRole())) {
             throw new RuntimeException("User is not a master");
         }
         List<MasterService> masterServices = masterServiceRepository.findByMaster(master);
@@ -83,7 +84,7 @@ public class MasterServiceServiceImpl implements MasterServiceService {
     public List<MasterServiceResponse> getMasterServicesBySalonServiceName(String salonServiceName) {
         SalonService salonService = salonServiceRepository.findByName(salonServiceName)
                 .orElseThrow(() -> new RuntimeException("Salon service not found"));
-        List<MasterService> masterServices = masterServiceRepository.findByService(salonService);
+        List<MasterService> masterServices = masterServiceRepository.findBySalonService(salonService);
         return masterServices.stream()
                 .map(masterServiceMapper::toResponse)
                 .collect(Collectors.toList());

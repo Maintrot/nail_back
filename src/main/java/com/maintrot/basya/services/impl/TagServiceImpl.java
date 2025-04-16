@@ -2,6 +2,7 @@ package com.maintrot.basya.services.impl;
 
 import com.maintrot.basya.dtoes.TagRequest;
 import com.maintrot.basya.dtoes.TagResponse;
+import com.maintrot.basya.enums.Role;
 import com.maintrot.basya.mappers.TagMapper;
 import com.maintrot.basya.models.Tag;
 import com.maintrot.basya.models.User;
@@ -30,12 +31,12 @@ public class TagServiceImpl implements TagService {
     public TagResponse createTag(TagRequest tagRequest) {
         User client = userRepository.findById(tagRequest.getClientId())
                 .orElseThrow(() -> new RuntimeException("User not found"));
-        if (!"USER_CLIENT".equals(client.getRole())) {
+        if (!Role.USER_CLIENT.equals(client.getRole())) {
             throw new RuntimeException("User is not a client");
         }
         User master = userRepository.findById(tagRequest.getMasterId())
                 .orElseThrow(() -> new RuntimeException("User not found"));
-        if (!"USER_MASTER".equals(master.getRole())) {
+        if (!Role.USER_MASTER.equals(master.getRole())) {
             throw new RuntimeException("User is not a master");
         }
         Tag tag = tagMapper.toEntity(tagRequest);
@@ -77,7 +78,7 @@ public class TagServiceImpl implements TagService {
     public List<TagResponse> getTagsByClientName(String clientName) {
         User client = userRepository.findByName(clientName)
                 .orElseThrow(() -> new RuntimeException("User not found"));
-        if (!"USER_CLIENT".equals(client.getRole())) {
+        if (!Role.USER_CLIENT.equals(client.getRole())) {
             throw new RuntimeException("User is not a client");
         }
         List<Tag> tags = tagRepository.findByClient(client);
@@ -90,7 +91,7 @@ public class TagServiceImpl implements TagService {
     public List<TagResponse> getTagsByMasterName(String masterName) {
         User master = userRepository.findByName(masterName)
                 .orElseThrow(() -> new RuntimeException("User not found"));
-        if (!"USER_MASTER".equals(master.getRole())) {
+        if (!Role.USER_MASTER.equals(master.getRole())) {
             throw new RuntimeException("User is not a master");
         }
         List<Tag> tags = tagRepository.findByMaster(master);

@@ -2,6 +2,7 @@ package com.maintrot.basya.services.impl;
 
 import com.maintrot.basya.dtoes.ReviewRequest;
 import com.maintrot.basya.dtoes.ReviewResponse;
+import com.maintrot.basya.enums.Role;
 import com.maintrot.basya.mappers.ReviewMapper;
 import com.maintrot.basya.models.Review;
 import com.maintrot.basya.models.User;
@@ -30,7 +31,7 @@ public class ReviewServiceImpl implements ReviewService {
     public ReviewResponse createReview(ReviewRequest reviewRequest) {
         User client = userRepository.findById(reviewRequest.getClientId())
                 .orElseThrow(() -> new RuntimeException("User not found"));
-        if (!"USER_CLIENT".equals(client.getRole())) {
+        if (!Role.USER_CLIENT.equals(client.getRole())) {
             throw new RuntimeException("User is not a client");
         }
         Review review = reviewMapper.toEntity(reviewRequest);
@@ -66,5 +67,18 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     public void deleteReview(Long id) {
         reviewRepository.deleteById(id);
+    }
+
+    @Override
+    public List<ReviewResponse> getReviewsByClientName(String clientName) {
+        User client = userRepository.findByName(clientName)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        if (!Role.USER_CLIENT.equals(client.getRole())) {
+            throw new RuntimeException("User is not a client");
+        }
+        List<Review> reviews = reviewRepository.findByClient(client);
+        return reviews.stream()
+                .map(reviewMapper::toResponse)
+                .collect(Collectors.toList());
     }
 }

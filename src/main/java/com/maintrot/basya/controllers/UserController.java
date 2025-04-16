@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,6 +27,7 @@ public class UserController {
 
     @Operation(summary = "Создать нового пользователя")
     @PostMapping
+    @PreAuthorize("hasRole('USER_ADMIN')")
     public ResponseEntity<UserResponse> createUser(@RequestBody UserRequest request) {
         UserResponse response = userService.createUser(request);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
@@ -33,6 +35,7 @@ public class UserController {
 
     @Operation(summary = "Получить пользователя по ID")
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('USER_CLIENT', 'USER_MASTER', 'USER_ADMIN')")
     public ResponseEntity<UserResponse> getUser(@PathVariable Long id) {
         UserResponse response = userService.getUser(id);
         return ResponseEntity.ok(response);
@@ -40,6 +43,7 @@ public class UserController {
 
     @Operation(summary = "Получить список всех пользователей")
     @GetMapping
+    @PreAuthorize("hasRole('USER_ADMIN')")
     public ResponseEntity<List<UserResponse>> getAllUsers() {
         List<UserResponse> responses = userService.getAllUsers();
         return ResponseEntity.ok(responses);
@@ -47,6 +51,7 @@ public class UserController {
 
     @Operation(summary = "Обновить данные пользователя")
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('USER_CLIENT', 'USER_MASTER', 'USER_ADMIN')")
     public ResponseEntity<UserResponse> updateUser(@PathVariable Long id, @RequestBody UserRequest request) {
         UserResponse response = userService.updateUser(id, request);
         return ResponseEntity.ok(response);
@@ -54,6 +59,7 @@ public class UserController {
 
     @Operation(summary = "Удалить пользователя")
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('USER_CLIENT', 'USER_MASTER', 'USER_ADMIN')")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();
@@ -61,6 +67,7 @@ public class UserController {
 
     @Operation(summary = "Получить пользователя по имени")
     @GetMapping("/name/{name}")
+    @PreAuthorize("hasRole('USER_ADMIN')")
     public ResponseEntity<UserResponse> getUserByName(@PathVariable String name) {
         UserResponse userResponse = userService.getUserByName(name);
         return ResponseEntity.ok(userResponse);
@@ -68,14 +75,16 @@ public class UserController {
 
     @Operation(summary = "Получить список пользователей по роли")
     @GetMapping("/role/{role}")
+    @PreAuthorize("hasRole('USER_ADMIN')")
     public ResponseEntity<List<UserResponse>> getUsersByrole(@PathVariable String role) {
         Role userRole = Role.valueOf(role);
         List<UserResponse> userResponses = userService.getUsersByRole(userRole);
         return ResponseEntity.ok(userResponses);
     }
 
-    @Operation(summary = "Найти пользоватееля по номеру телефона")
+    @Operation(summary = "Найти пользователя по номеру телефона")
     @GetMapping("/phone/{phone}")
+    @PreAuthorize("hasRole('USER_ADMIN')")
     public ResponseEntity<UserResponse> getUserByPhone(@PathVariable String phone) {
         UserResponse userResponse = userService.getUserByPhone(phone);
         return ResponseEntity.ok(userResponse);

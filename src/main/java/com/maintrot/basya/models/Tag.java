@@ -17,12 +17,10 @@ public class Tag {
 
     @ManyToOne
     @JoinColumn(name = "client_id", nullable = false)
-    @Where(clause = "role = 'USER_CLIENT'")
     private User client;
 
     @ManyToOne
     @JoinColumn(name = "master_id", nullable = false)
-    @Where(clause = "role = 'USER_MASTER'")
     private User master;
 
     @Column(name = "Тег", nullable = false)

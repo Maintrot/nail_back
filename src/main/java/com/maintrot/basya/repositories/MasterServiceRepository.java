@@ -9,5 +9,5 @@ import java.util.List;
 
 public interface MasterServiceRepository extends JpaRepository<MasterService, Long> {
     List<MasterService> findByMaster(User master);
-    List<MasterService> findByService(SalonService service);
+    List<MasterService> findBySalonService(SalonService service);
 }

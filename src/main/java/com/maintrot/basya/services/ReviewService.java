@@ -11,4 +11,5 @@ public interface ReviewService {
     List<ReviewResponse> getAllReviews();
     ReviewResponse updateReview(Long id, ReviewRequest reviewRequest);
     void deleteReview(Long id);
+    List<ReviewResponse> getReviewsByClientName(String clientName);
 }

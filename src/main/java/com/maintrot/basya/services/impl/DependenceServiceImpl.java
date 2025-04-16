@@ -48,15 +48,30 @@ public class DependenceServiceImpl implements DependenceService {
     public DependenceResponse updateDependence(Long id, DependenceRequest dependenceRequest) {
         Dependence dependence = dependenceRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Dependence not found"));
-        dependence.setName(dependenceRequest.getName());
-        dependence.setaBoolean(dependenceRequest.getaBoolean());
-        dependence.setNumber(dependenceRequest.getNumber());
-        dependence.setText(dependenceRequest.getText());
+        if (dependenceRequest.getName() != null) {
+            dependence.setName(dependenceRequest.getName());
+        }
+        if (dependenceRequest.getaBoolean() != null) {
+            dependence.setaBoolean(dependenceRequest.getaBoolean());
+        }
+        if (dependenceRequest.getNumber() != 0) {
+            dependence.setNumber(dependenceRequest.getNumber());
+        }
+        if (dependenceRequest.getText() != null) {
+            dependence.setText(dependenceRequest.getText());
+        }
         return dependenceMapper.toResponse(dependence);
     }
 
     @Override
     public void deleteDependence(Long id) {
         dependenceRepository.deleteById(id);
+    }
+
+    @Override
+    public DependenceResponse getDependenceByName(String name) {
+        Dependence dependence = dependenceRepository.findByName(name)
+                .orElseThrow(() -> new RuntimeException("Dependence not found"));
+        return dependenceMapper.toResponse(dependence);
     }
 }
